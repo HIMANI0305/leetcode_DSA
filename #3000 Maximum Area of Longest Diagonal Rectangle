@@ -1,0 +1,17 @@
+class Solution {
+    public int areaOfMaxDiagonal(int[][] dimensions) {
+        long bestDiag = -1;  
+        int bestArea = 0;
+
+        for (int[] d : dimensions) {
+            long w = d[0], h = d[1];
+            long diagSq = w*w + h*h;
+            int area = (int)(w * h);
+            if (diagSq > bestDiag || (diagSq == bestDiag && area > bestArea)) {
+                bestDiag = diagSq;
+                bestArea = area;
+            }
+        }
+        return bestArea;  
+    }
+}
