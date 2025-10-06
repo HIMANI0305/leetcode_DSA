@@ -1,0 +1,31 @@
+class Solution {
+    public int dominantIndex(int[] nums) {
+        
+        if (nums.length == 0) {
+            return -1;
+        }
+
+        int max1 = -1; 
+        int max2 = -1; 
+        int maxIndex = -1; 
+
+        for (int i = 0; i < nums.length; i++) {
+            int currentNum = nums[i];
+
+            if (currentNum > max1) {
+                
+                max2 = max1;       
+                max1 = currentNum; 
+                maxIndex = i;      
+            } else if (currentNum > max2) {
+                
+                max2 = currentNum; 
+            }
+        }
+        if (max1 >= 2 * max2) {
+            return maxIndex;
+        } else {
+            return -1;
+        }
+    }
+}
