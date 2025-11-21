@@ -1,0 +1,47 @@
+class Solution {
+    // 0 = uncomputed, 1 = true, 2 = false
+    private int[][] memo;
+    private String text;
+    private String pattern;
+
+    public boolean isMatch(String s, String p) {
+        text = s;
+        pattern = p;
+        // memo table size is (s.length() + 1) x (p.length() + 1)
+        memo = new int[s.length() + 1][p.length() + 1];
+        return dp(0, 0);
+    }
+
+    private boolean dp(int i, int j) {
+        // If result is already computed, return it
+        if (memo[i][j] != 0) {
+            return memo[i][j] == 1;
+        }
+
+        boolean ans;
+
+        // Base Case: Pattern exhausted
+        if (j == pattern.length()) {
+            ans = (i == text.length()); // True only if string is also exhausted
+        } else {
+            // Check if current chars match (s[i] and p[j])
+            boolean firstMatch = (i < text.length() && 
+                                  (pattern.charAt(j) == text.charAt(i) || pattern.charAt(j) == '.'));
+
+            // Check if '*' is the next character in the pattern
+            if (j + 1 < pattern.length() && pattern.charAt(j + 1) == '*') {
+                // Case 1: '*' matches 0 times (skip p[j] and p[j+1])
+                // OR
+                // Case 2: '*' matches 1 or more times (match s[i] and keep pattern p[j:] for reuse)
+                ans = (dp(i, j + 2) || (firstMatch && dp(i + 1, j)));
+            } else {
+                // No '*' follows, standard character match
+                ans = firstMatch && dp(i + 1, j + 1);
+            }
+        }
+
+        // Store and return the result
+        memo[i][j] = ans ? 1 : 2;
+        return ans;
+    }
+}
