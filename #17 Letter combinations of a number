@@ -1,0 +1,59 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
+class Solution {
+    private List<String> result = new ArrayList<>();
+    private Map<Character, String> phoneMap = new HashMap<>();
+
+    public List<String> letterCombinations(String digits) {
+        if (digits == null || digits.isEmpty()) {
+            return result;
+        }
+
+        // Initialize the phone number mapping
+        phoneMap.put('2', "abc");
+        phoneMap.put('3', "def");
+        phoneMap.put('4', "ghi");
+        phoneMap.put('5', "jkl");
+        phoneMap.put('6', "mno");
+        phoneMap.put('7', "pqrs");
+        phoneMap.put('8', "tuv");
+        phoneMap.put('9', "wxyz");
+
+        // Start the backtracking process from index 0 with an empty combination
+        backtrack(digits, 0, new StringBuilder());
+        
+        return result;
+    }
+
+    /**
+     * @param digits The input string of digits.
+     * @param index The index of the digit we are currently processing.
+     * @param currentCombination The combination string built so far.
+     */
+    private void backtrack(String digits, int index, StringBuilder currentCombination) {
+        // Base Case: If the combination length equals the digits length, we have a valid result.
+        if (index == digits.length()) {
+            result.add(currentCombination.toString());
+            return;
+        }
+
+        char digit = digits.charAt(index);
+        String letters = phoneMap.get(digit);
+
+        // Iterate through all possible letters for the current digit
+        for (char letter : letters.toCharArray()) {
+            // 1. CHOOSE: Append the letter to the current combination
+            currentCombination.append(letter);
+
+            // 2. EXPLORE: Recurse to the next digit
+            backtrack(digits, index + 1, currentCombination);
+
+            // 3. UNCHOOSE (Backtrack): Remove the last letter to try the next option
+            // This is the step that "backtracks" to the previous state.
+            currentCombination.deleteCharAt(currentCombination.length() - 1);
+        }
+    }
+}
